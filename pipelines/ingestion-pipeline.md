@@ -27,15 +27,21 @@ The ingestion process is designed to preserve source information before pseudony
 
 The Microsoft Fabric pipeline orchestrates source data ingestion and downstream pseudonymisation within a single workflow.
 
-### 4.1 ForEach Activity
+#### ForEach Configuration
 
-**Activity name:** `ForEach_File_available`
+The `ForEach_File_available` activity is configured with sequential execution enabled.
 
-The ForEach activity iterates through the configured source datasets and executes a reusable Copy Data activity for each item.
+**Items expression:**
 
-**Child activity:** `Copy_each_file_into_table`
+```text
+@createArray('PharmacyDimDate', 'PharmacyDimProduct', 'PharmacyDimPharmacy', 'PharmacyFactSales')
+```
 
-This approach supports multiple source-to-destination operations without requiring separate pipeline branches for every dataset.
+The expression defines four source datasets to be processed by the reusable `Copy_each_file_into_table` activity.
+
+Each iteration supplies one dataset name to the Copy Data activity. Sequential execution ensures that the iterations run one after another.
+
+This design avoids duplicating Copy Data activities and makes it easier to extend the pipeline with additional datasets.
 
 ### 4.2 Copy Data Activity
 
