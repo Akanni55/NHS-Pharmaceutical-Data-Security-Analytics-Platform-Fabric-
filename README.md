@@ -35,6 +35,20 @@ This project investigates how a modern data platform can support analytical requ
 7. Develop Power BI dashboards for pharmaceutical analytics.
 8. Evaluate Dynamic Data Masking against pseudonymisation and document technical findings.
 
+## Solution Architecture
+
+The platform follows a layered Microsoft Fabric architecture, separating raw ingestion, pseudonymisation, curated storage, processing audit logs and Power BI reporting.
+
+### Architecture Diagram
+
+[View the End-to-End Data Flow](architecture/data-flow.md)
+
+### Technical Documentation
+
+[Read the Solution Architecture Overview](architecture/architecture-overview.md)
+
+The architecture demonstrates how pharmaceutical data moves through the platform while sensitive identifiers are protected before being made available for analytics.
+
 ## Data Disclaimer
 
 This is an independent personal portfolio project using a dummy NHS pharmaceutical data.
