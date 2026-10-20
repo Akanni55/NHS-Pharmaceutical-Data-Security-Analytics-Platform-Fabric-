@@ -23,19 +23,57 @@ These datasets are ingested into the raw Lakehouse layer before downstream trans
 
 The ingestion process is designed to preserve source information before pseudonymisation and analytical transformations.
 
-## 4. Parameterised Ingestion Design
+## 4. Pipeline Implementation
 
-The pipeline design supports reusable ingestion logic by dynamically supplying source file names and destination table names.
+The Microsoft Fabric pipeline orchestrates source data ingestion and downstream pseudonymisation within a single workflow.
 
-This reduces the need to create and maintain separate Copy Data activities for every dataset.
+### 4.1 ForEach Activity
 
-The target design includes:
+**Activity name:** `ForEach_File_available`
 
-1. A list of source datasets.
-2. A ForEach activity to iterate through the list.
-3. A Copy Data activity inside the loop.
-4. Dynamic source file and destination table configuration.
-5. Pipeline execution monitoring and error handling.
+The ForEach activity iterates through the configured source datasets and executes a reusable Copy Data activity for each item.
+
+**Child activity:** `Copy_each_file_into_table`
+
+This approach supports multiple source-to-destination operations without requiring separate pipeline branches for every dataset.
+
+### 4.2 Copy Data Activity
+
+The Copy Data activity is responsible for loading source data into the Fabric Lakehouse.
+
+The pipeline uses a reusable activity within the ForEach loop, enabling the ingestion process to be repeated for each configured source item.
+
+Exact source and destination expressions will be documented separately after reviewing the activity configuration.
+
+### 4.3 Notebook Execution
+
+**Activity name:** `Run_pseudonymisation`
+
+A Microsoft Fabric Notebook activity is connected to the ForEach activity using a success dependency.
+
+This ensures that the pseudonymisation notebook is triggered only after the ForEach activity completes successfully.
+
+The notebook forms the transformation stage of the architecture, preparing pseudonymised datasets for downstream analytics.
+
+### 4.4 Pipeline Execution Evidence
+
+A successful pipeline execution was recorded on **20 October 2026**.
+
+The execution screenshot confirms:
+
+- Overall pipeline status: Succeeded.
+- ForEach activity status: Succeeded.
+- ForEach activity duration: 1 minute 46 seconds.
+- Multiple successful Copy Data executions.
+- A downstream notebook activity connected through a success dependency.
+
+![Successful Fabric Pipeline Execution](fabric-ingestion-pipeline.png)
+
+### 4.5 Implementation Status
+
+The pipeline orchestration and successful execution have been verified through Fabric monitoring evidence.
+
+Further documentation will cover the exact parameter array, dynamic expressions, source and destination mappings, and pseudonymisation notebook configuration.
 
 ## 5. Raw Lakehouse Tables
 
