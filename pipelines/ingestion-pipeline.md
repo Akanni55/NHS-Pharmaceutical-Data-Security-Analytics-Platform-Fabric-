@@ -86,7 +86,6 @@ Dynamic destination table name:
 The ForEach activity processes each dataset sequentially. The source expression appends `.csv` to the current item, while the destination expression uses the same item as the target table name.
 
 The overwrite configuration replaces the destination table contents during each ingestion run. This is a full-refresh ingestion pattern rather than incremental loading.
-
 ### 4.3 Notebook Execution
 
 **Activity name:** `Run_pseudonymisation`
