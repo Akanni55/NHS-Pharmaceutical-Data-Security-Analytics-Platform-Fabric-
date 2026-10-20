@@ -43,13 +43,49 @@ Each iteration supplies one dataset name to the Copy Data activity. Sequential e
 
 This design avoids duplicating Copy Data activities and makes it easier to extend the pipeline with additional datasets.
 
-### 4.2 Copy Data Activity
+#### Dynamic Source and Destination Configuration
 
-The Copy Data activity is responsible for loading source data into the Fabric Lakehouse.
+The `Copy_each_file_into_table` activity uses dynamic expressions to ingest multiple CSV files into separate Microsoft Fabric Lakehouse tables.
 
-The pipeline uses a reusable activity within the ForEach loop, enabling the ingestion process to be repeated for each configured source item.
+**Source configuration**
 
-Exact source and destination expressions will be documented separately after reviewing the activity configuration.
+- Connection: `LH_PLICS_POC`
+- Root folder: `Files`
+- File path type: `File path`
+- File format: `DelimitedText`
+- Recursive search: Enabled
+
+Dynamic source filename:
+
+```text
+@concat(item(),'.csv')
+```
+
+**Destination configuration**
+
+- Connection: `LH_PLICS_POC`
+- Root folder: `Tables`
+- Schema: `dbo`
+- Table action: `Overwrite`
+
+Dynamic destination table name:
+
+```text
+@item()
+```
+
+**Source-to-destination mapping**
+
+| Source file | Lakehouse table |
+|---|---|
+| `PharmacyDimDate.csv` | `dbo.PharmacyDimDate` |
+| `PharmacyDimProduct.csv` | `dbo.PharmacyDimProduct` |
+| `PharmacyDimPharmacy.csv` | `dbo.PharmacyDimPharmacy` |
+| `PharmacyFactSales.csv` | `dbo.PharmacyFactSales` |
+
+The ForEach activity processes each dataset sequentially. The source expression appends `.csv` to the current item, while the destination expression uses the same item as the target table name.
+
+The overwrite configuration replaces the destination table contents during each ingestion run. This is a full-refresh ingestion pattern rather than incremental loading.
 
 ### 4.3 Notebook Execution
 
