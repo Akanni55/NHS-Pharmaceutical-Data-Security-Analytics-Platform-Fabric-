@@ -1,73 +1,122 @@
-# NHS-Pharmaceutical Data Security & Analytics Platform
+# Pharmaceutical Data Security & Analytics Platform
 
-### An NHS-Inspired Microsoft Fabric Data Engineering Project
+### An NHS-inspired Microsoft Fabric data engineering project
 
-**Technologies:** Microsoft Fabric | PySpark | Python | Delta Lake | HMAC-SHA-256 | SQL | Power BI
+**Technologies:** Microsoft Fabric · Data Pipelines · Lakehouse · PySpark · Python · Delta Lake · HMAC-SHA-256 · SQL · Power BI
 
-## Project Overview
+> **Independent portfolio demonstration.** This project uses fictional pharmaceutical data. It is not an official NHS project and is not affiliated with or endorsed by the NHS.
 
-This project demonstrates the design and implementation of a secure, end-to-end pharmaceutical data engineering and analytics platform using Microsoft Fabric and Power BI.
+## Explore the project
 
-The solution is based on a fictional NHS-inspired healthcare scenario in which pharmaceutical transaction data is collected from multiple pharmacy locations and used to support financial reporting, operational monitoring and data-driven decision-making.
+| Start here | What you'll find |
+| --- | --- |
+| **[Live interactive Power BI dashboard](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)** | Revenue, cost, margin and sales analytics using fictional data |
+| **[End-to-end data flow](architecture/data-flow.md)** | Visual walkthrough of the platform's data movement |
+| **[Architecture overview](architecture/architecture-overview.md)** | The solution's components and design |
+| **[PySpark pseudonymisation implementation](notebooks/pseudonymisation-implementation.md)** | One-page explanation with actual Python code, validation and limitations |
+| **[Original notebook](notebooks/NB_NHS_PHARMACY_%20PSEUDONYMISATION.ipynb)** | Sanitised Jupyter notebook for inspecting the implementation |
 
-A key challenge is ensuring that sensitive identifiers remain protected while maintaining consistent relationships across datasets and preserving analytical functionality.
+## Project overview
 
-The platform addresses this challenge through automated data ingestion, deterministic HMAC-SHA-256 pseudonymisation, cross-column sensitive identifier detection, processing audit logs and secure Power BI reporting.
-## 📊 Live Interactive Power BI Dashboard
+This project demonstrates the design and implementation of a secure, end-to-end pharmaceutical data engineering and analytics platform using **Microsoft Fabric** and **Power BI**.
 
-Explore the **Pharmaceutical Intelligence Dashboard**, an interactive analytics report built with Power BI using fictional pharmaceutical sales data.
+The solution models a fictional NHS-inspired healthcare scenario in which pharmaceutical transactions from multiple pharmacy locations support financial reporting, operational monitoring and data-driven decision-making.
 
-### [🚀 View Live Interactive Dashboard](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)
+The central engineering challenge is to **protect identifiers without breaking analytical relationships**. The platform addresses this through automated ingestion, deterministic HMAC-SHA-256 pseudonymisation, detection of known identifiers in other text columns, curated Delta tables, processing audit logs and Power BI reporting.
 
-**Dashboard capabilities**
-- Revenue, cost, margin and sales performance KPIs.
+## Business problem
+
+Healthcare organisations need reliable pharmaceutical data to monitor expenditure, understand transaction patterns and support operational decisions. Different stakeholders require different levels of detail: finance teams may need aggregated performance, operational teams may need pharmacy-level insights, and authorised analysts may need more granular data.
+
+Unnecessary exposure of identifiers introduces privacy and governance risks. This project explores how to support analytical use cases while applying data-protection controls.
+
+## Solution architecture
+
+The demonstration uses a layered Microsoft Fabric design:
+
+```text
+Fictional pharmaceutical source data
+                |
+                v
+       Fabric Data Pipeline
+                |
+                v
+      Lakehouse raw tables (dbo)
+                |
+                v
+  PySpark HMAC-SHA-256 transformation
+                |
+          +-----+------+
+          |            |
+          v            v
+ Curated Delta     Processing audit
+ tables (psy)      log (metadata)
+          |
+          v
+  Power BI semantic model
+          |
+          v
+   Analytical reporting
+```
+
+The diagram is a conceptual overview; see the **[end-to-end data flow](architecture/data-flow.md)** and **[architecture documentation](architecture/architecture-overview.md)** for the detailed design.
+
+### Data model
+
+The analytical model follows a star-schema pattern with `FactSales` related to `DimDate`, `DimProduct` and `DimPharmacy`. The pharmacy identifier is transformed consistently across the sales fact and pharmacy dimension, allowing their relationship to be maintained.
+
+| Raw source table | Transformation outcome |
+| --- | --- |
+| `dbo.PharmacyFactSales` | `psy.PharmacyFactSales_Curated` |
+| `dbo.PharmacyDimPharmacy` | `psy.PharmacyDimPharmacy_Curated` |
+| `dbo.PharmacyDimDate` | Date dimension used for analytics; not pseudonymised by this notebook |
+| `dbo.PharmacyDimProduct` | Product dimension used for analytics; not pseudonymised by this notebook |
+
+## Security engineering: HMAC-SHA-256 pseudonymisation
+
+The PySpark notebook implements **deterministic, keyed HMAC-SHA-256 pseudonymisation** of fictional pharmacy identifiers. Given the same secret and normalisation rules, the same source identifier produces the same pseudonym, preserving joins between fact and dimension tables.
+
+The implementation also searches string columns for known pharmacy identifiers, including identifiers embedded within longer text, and replaces their occurrences using an identifier mapping. Curated results are written to Delta tables, and the sales fact processing stage records audit information.
+
+**[Read the full pseudonymisation implementation — explanations and Python code on one page →](notebooks/pseudonymisation-implementation.md)**
+
+**Engineering trade-offs:** This proof of concept uses an in-memory identifier mapping, which is appropriate only for small datasets. Audit logging currently covers the sales fact transformation; distributed mapping, stronger boundary-aware matching and broader automated data-quality checks are potential improvements. Pseudonymisation is **not anonymisation** and does not replace access controls or governance.
+
+## Live interactive Power BI dashboard
+
+### [🚀 Open the Pharmaceutical Intelligence Dashboard](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)
+
+The interactive report demonstrates:
+
+- Revenue, cost, margin and sales-performance KPIs.
 - Monthly revenue and sales trends.
 - Revenue comparisons across countries.
-- Interactive filters and cross-filtering.
-- Consistent pseudonymised pharmacy identifiers that preserve fact-to-dimension relationships.
+- Interactive filtering and cross-filtering.
+- Analytics using consistently pseudonymised pharmacy identifiers.
 
-**Data security:** This public dashboard is a separate portfolio demonstration using fictional data and independently generated pseudonyms. It illustrates the analytical output of the NHS-inspired Microsoft Fabric architecture without providing access to the original NHS test environment.
+**Public-report distinction:** The publicly accessible Power BI report uses a **separate portfolio dataset** containing fictional data and independently generated pseudonyms. It is not a live connection to the original Fabric proof-of-concept environment. Publish-to-web content is publicly accessible; no real patient data or confidential source data should be included.
 
-*This is an independent portfolio project and is not affiliated with or endorsed by the NHS.*
-## Business Problem
+## Project objectives
 
-Healthcare organisations require reliable pharmaceutical data to monitor expenditure, understand transaction patterns and support operational decisions.
+1. Automate pharmaceutical data ingestion using Microsoft Fabric Data Pipelines.
+2. Store and transform data using a Fabric Lakehouse and Delta tables.
+3. Apply deterministic HMAC-SHA-256 pseudonymisation to selected identifiers.
+4. Detect and replace known identifiers appearing in other columns, including embedded text.
+5. Preserve consistent fact-to-dimension relationships.
+6. Record processing activity through audit logs.
+7. Deliver pharmaceutical analytics through Power BI.
+8. Compare Dynamic Data Masking with pseudonymisation and document the engineering trade-offs.
 
-However, different stakeholders have different data-access requirements. Finance teams may require aggregated financial performance, operational teams may need pharmacy-level insights, and authorised analysts may require more detailed information.
+## Implementation notes and limitations
 
-Exposing sensitive identifiers unnecessarily creates privacy and governance risks.
+- The public notebook is **sanitised** and requires a securely supplied runtime HMAC secret before execution; do not commit secrets or credentials.
+- The notebook transforms the pharmacy and sales tables; the date and product dimensions are not pseudonymised by that notebook.
+- The current audit-log implementation covers the sales fact processing stage.
+- The example demonstrates engineering design choices; production use would require security review, appropriate secret management, scalable transformations, automated validation and access governance.
+- The public Power BI report's availability depends on its hosting environment and Microsoft service settings.
 
-This project investigates how a modern data platform can support analytical requirements while applying appropriate data protection controls.
+## Data and affiliation disclaimer
 
-## Project Objectives
+This repository documents an **independent, NHS-inspired personal portfolio project** using fictional pharmaceutical data. It does not use real NHS patient records and is not affiliated with, approved by or endorsed by the NHS.
 
-1. Build an automated data ingestion process using Microsoft Fabric Data Pipelines.
-2. Store and transform pharmaceutical data using Fabric Lakehouse and Delta tables.
-3. Apply deterministic HMAC-SHA-256 pseudonymisation to sensitive identifiers.
-4. Detect and pseudonymise identifiers appearing in other columns, including embedded text.
-5. Maintain consistent identifiers and relationships across fact and dimension tables.
-6. Implement processing logs to monitor pseudonymisation activity.
-7. Develop Power BI dashboards for pharmaceutical analytics.
-8. Evaluate Dynamic Data Masking against pseudonymisation and document technical findings.
-
-## Solution Architecture
-
-The platform follows a layered Microsoft Fabric architecture, separating raw ingestion, pseudonymisation, curated storage, processing audit logs and Power BI reporting.
-
-### Architecture Diagram
-
-[View the End-to-End Data Flow](architecture/data-flow.md)
-
-### Technical Documentation
-
-[Read the Solution Architecture Overview](architecture/architecture-overview.md)
-
-The architecture demonstrates how pharmaceutical data moves through the platform while sensitive identifiers are protected before being made available for analytics.
-
-## Data Disclaimer
-
-This is an independent personal portfolio project using a dummy NHS pharmaceutical data.
-
-It is inspired by healthcare data security and analytics requirements but is not an official NHS project, does not use real NHS patient records, and is not affiliated with or endorsed by the NHS.
-
-All architecture, code and documentation published in this repository are intended for demonstration and educational purposes.
+Published architecture, code and documentation are intended for educational and demonstration purposes. No real identifiers, credentials, confidential data or restricted environment details should be committed to this repository.
