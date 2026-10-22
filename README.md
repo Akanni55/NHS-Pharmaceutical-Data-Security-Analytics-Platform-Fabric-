@@ -61,6 +61,19 @@ Fictional pharmaceutical source data
 
 The diagram is a conceptual overview; see the **[end-to-end data flow](architecture/data-flow.md)** and **[architecture documentation](architecture/architecture-overview.md)** for the detailed design.
 
+### Microsoft Fabric Pipeline — Successful Execution
+
+![Microsoft Fabric pipeline showing four successful Copy Data activities followed by a PySpark pseudonymisation notebook](pipelines/fabric-pipeline-execution.png)
+
+The pipeline orchestrates the end-to-end data engineering workflow:
+
+1. **ForEach activity:** Iterates through four pharmaceutical source datasets.
+2. **Copy Data activity:** Ingests each dataset into Microsoft Fabric Lakehouse tables.
+3. **Notebook activity:** Executes the PySpark HMAC-SHA-256 pseudonymisation process after successful ingestion.
+4. **Execution monitoring:** Confirms successful completion of all six activities.
+
+The pipeline demonstrates automated ingestion, dependency-based orchestration, repeatable transformation and operational monitoring.
+
 ### Data model
 
 The analytical model follows a star-schema pattern with `FactSales` related to `DimDate`, `DimProduct` and `DimPharmacy`. The pharmacy identifier is transformed consistently across the sales fact and pharmacy dimension, allowing their relationship to be maintained.
