@@ -86,6 +86,14 @@ The implementation also searches string columns for known pharmacy identifiers, 
 
 ### [🚀 Open the Pharmaceutical Intelligence Dashboard](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)
 
+### Dashboard Preview
+
+![Pharmaceutical Intelligence Dashboard showing revenue, profit, cost, sales trends and geographical analysis](powerbi/pharmacy-analytics-dashboard.png)
+
+*Interactive Power BI dashboard built using fictional pharmaceutical sales data. The report provides financial KPIs, monthly trends, geographical comparisons and pharmacy-level filtering.*
+
+[**Explore the Live Interactive Dashboard**](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)
+
 The interactive report demonstrates:
 
 - Revenue, cost, margin and sales-performance KPIs.
