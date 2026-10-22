@@ -13,7 +13,22 @@ The solution is based on a fictional NHS-inspired healthcare scenario in which p
 A key challenge is ensuring that sensitive identifiers remain protected while maintaining consistent relationships across datasets and preserving analytical functionality.
 
 The platform addresses this challenge through automated data ingestion, deterministic HMAC-SHA-256 pseudonymisation, cross-column sensitive identifier detection, processing audit logs and secure Power BI reporting.
+## 📊 Live Interactive Power BI Dashboard
 
+Explore the **Pharmaceutical Intelligence Dashboard**, an interactive analytics report built with Power BI using fictional pharmaceutical sales data.
+
+### [🚀 View Live Interactive Dashboard](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)
+
+**Dashboard capabilities**
+- Revenue, cost, margin and sales performance KPIs.
+- Monthly revenue and sales trends.
+- Revenue comparisons across countries.
+- Interactive filters and cross-filtering.
+- Consistent pseudonymised pharmacy identifiers that preserve fact-to-dimension relationships.
+
+**Data security:** This public dashboard is a separate portfolio demonstration using fictional data and independently generated pseudonyms. It illustrates the analytical output of the NHS-inspired Microsoft Fabric architecture without providing access to the original NHS test environment.
+
+*This is an independent portfolio project and is not affiliated with or endorsed by the NHS.*
 ## Business Problem
 
 Healthcare organisations require reliable pharmaceutical data to monitor expenditure, understand transaction patterns and support operational decisions.
