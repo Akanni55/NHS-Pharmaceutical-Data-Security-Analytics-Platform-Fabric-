@@ -8,6 +8,8 @@
 
 ## Explore the project
 
+| **[Setup and reproduction guide](SETUP.md)** | Prerequisites, Fabric pipeline configuration, PySpark execution, validation and Power BI setup |
+
 | Start here | What you'll find |
 | --- | --- |
 | **[Live interactive Power BI dashboard](https://app.fabric.microsoft.com/view?r=eyJrIjoiY2FjM2IxMDMtNDY5OS00NDk5LTg4ZWQtMzYxODZhNzJkNzBkIiwidCI6IjYyODhhOGI0LWYxN2ItNGMzOC04ODkzLTE1MTNkMmM5MTVmZSJ9&embedImagePlaceholder=true)** | Revenue, cost, margin and sales analytics using fictional data |
