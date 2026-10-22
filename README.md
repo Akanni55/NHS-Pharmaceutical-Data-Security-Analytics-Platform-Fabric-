@@ -1,4 +1,4 @@
-# Pharmaceutical Data Security & Analytics Platform
+# NHS Pharmaceutical Data Security & Analytics Platform
 
 ### An NHS-inspired Microsoft Fabric data engineering project
 
